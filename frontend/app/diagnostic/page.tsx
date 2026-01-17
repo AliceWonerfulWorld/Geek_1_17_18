@@ -18,6 +18,7 @@ export default function DiagnosticPage() {
     const savedAnswers = sessionStorage.getItem(STORAGE_KEY);
     if (savedAnswers) {
       try {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setAnswers(JSON.parse(savedAnswers));
       } catch (error) {
         console.error('Failed to parse saved answers:', error);

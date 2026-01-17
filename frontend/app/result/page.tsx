@@ -5,9 +5,12 @@ import { STORAGE_KEY, DiagnosticAnswers } from '@/types/diagnosis';
 
 export default function ResultPage() {
   const [answers] = useState<DiagnosticAnswers | null>(() => {
+    // サーバーサイドではnullを返す
+    if (typeof window === 'undefined') return null;
+
     // sessionStorageから回答データを読み取る
     const savedAnswers = sessionStorage.getItem(STORAGE_KEY);
-    
+
     if (savedAnswers) {
       try {
         const parsedAnswers = JSON.parse(savedAnswers);
@@ -37,7 +40,7 @@ export default function ResultPage() {
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
             回答データ確認
           </h2>
-          
+
           {answers ? (
             <div className="space-y-2">
               <p className="text-green-600 dark:text-green-400 font-medium mb-4">

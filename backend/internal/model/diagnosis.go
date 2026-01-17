@@ -2,7 +2,7 @@ package model
 
 // DiagnosisRequest は診断リクエストの構造体
 type DiagnosisRequest struct {
-	Answers []Answer `json:"answers"`
+	Answers map[string]int `json:"answers"`
 }
 
 // Answer は質問への回答

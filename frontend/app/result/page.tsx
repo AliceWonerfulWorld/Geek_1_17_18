@@ -181,7 +181,7 @@ const getScoreRank = (score: number): RankKey => {
 };
 
 export default function ResultPage() {
-  const [score] = useState(70); // Aランク確認用
+  const [score] = useState(90); // Sランク確認用に高スコアをセット
   const rank = getScoreRank(score);
   const rankInfo = RANK_DATA[rank];
   const [showConfetti, setShowConfetti] = useState(false);

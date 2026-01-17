@@ -1,27 +1,25 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { STORAGE_KEY, DiagnosticAnswers } from '@/types/diagnosis';
 
 export default function ResultPage() {
-  const [answers, setAnswers] = useState<DiagnosticAnswers | null>(null);
-
-  useEffect(() => {
+  const [answers] = useState<DiagnosticAnswers | null>(() => {
     // sessionStorageから回答データを読み取る
     const savedAnswers = sessionStorage.getItem(STORAGE_KEY);
     
     if (savedAnswers) {
       try {
         const parsedAnswers = JSON.parse(savedAnswers);
-        setAnswers(parsedAnswers);
-        
         // 読み取り完了後、sessionStorageをクリア
         sessionStorage.removeItem(STORAGE_KEY);
+        return parsedAnswers;
       } catch (error) {
         console.error('Failed to parse answers:', error);
       }
     }
-  }, []);
+    return null;
+  });
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-black py-12 px-4">

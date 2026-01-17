@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { QUESTIONS } from '@/lib/constants';
 import { DiagnosticAnswers, STORAGE_KEY } from '@/types/diagnosis';
@@ -10,19 +10,17 @@ import LayoutContainer from '@/components/common/LayoutContainer';
 
 export default function DiagnosticPage() {
   const router = useRouter();
-  const [answers, setAnswers] = useState<DiagnosticAnswers>({});
-
-  // 初回レンダリング時にsessionStorageから回答を復元
-  useEffect(() => {
+  const [answers, setAnswers] = useState<DiagnosticAnswers>(() => {
     const savedAnswers = sessionStorage.getItem(STORAGE_KEY);
     if (savedAnswers) {
       try {
-        setAnswers(JSON.parse(savedAnswers));
+        return JSON.parse(savedAnswers);
       } catch (error) {
         console.error('Failed to parse saved answers:', error);
       }
     }
-  }, []);
+    return {};
+  });
 
   // 回答が変更されるたびにsessionStorageに保存
   const handleAnswerChange = (questionId: number, value: number) => {

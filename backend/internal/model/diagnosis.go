@@ -2,13 +2,14 @@ package model
 
 // DiagnosisRequest は診断リクエストの構造体
 type DiagnosisRequest struct {
-	Answers []Answer `json:"answers"`
+	Answers map[string]int `json:"answers"`
 }
 
-// Answer は質問への回答
-type Answer struct {
-	QuestionID int    `json:"question_id"`
-	Value      string `json:"value"`
+// DiagnosisResult は診断結果のビジネスロジック構造体
+type DiagnosisResult struct {
+	Score   int
+	Rank    string
+	Comment string
 }
 
 // DiagnosisResponse は診断結果のレスポンス

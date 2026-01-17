@@ -27,7 +27,7 @@ export default function DiagnosticPage() {
   }, []);
 
   // 回答が変更されるたびにsessionStorageに保存
-  const handleAnswerChange = (questionId: string, value: number) => {
+  const handleAnswerChange = (questionId: string | number, value: number) => {
     const newAnswers = {
       ...answers,
       [questionId]: value,

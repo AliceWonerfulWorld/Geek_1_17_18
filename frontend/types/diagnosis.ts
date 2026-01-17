@@ -1,6 +1,6 @@
 //診断質問の型定義
 export interface Question {
-  id: number;
+  id: string | number;
   text: string;
   axis?: string; // 評価軸（オプショナル）
 }

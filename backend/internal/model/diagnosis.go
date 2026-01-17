@@ -11,8 +11,9 @@ type Answer struct {
 	Value      string `json:"value"`
 }
 
-// DiagnosisResponse は診断結果のレスポンス
-type DiagnosisResponse struct {
-	Score  int    `json:"score"`
-	Reason string `json:"reason"`
+// DiagnosisResult は診断結果の構造体
+type DiagnosisResult struct {
+	Score   int    `json:"score"`   // 相性スコア（0〜100）
+	Rank    string `json:"rank"`    // 相性ランク（文字列）
+	Comment string `json:"comment"` // コメント（文字列）
 }

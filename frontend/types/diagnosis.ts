@@ -2,6 +2,7 @@
 export interface Question {
   id: number;
   text: string;
+  axis?: string; // 評価軸（オプショナル）
 }
 
 //診断回答の型定義

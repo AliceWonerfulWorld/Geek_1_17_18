@@ -6,7 +6,7 @@ interface QuestionCardProps {
   question: Question;
   questionNumber: number;
   selectedValue: number | undefined;
-  onChange: (questionId: number, value: number) => void;
+  onChange: (questionId: string | number, value: number) => void;
 }
 
 //質問番号・質問文・評価ボタンをまとめて表示するカードコンポーネント

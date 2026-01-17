@@ -3,28 +3,27 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { QUESTIONS } from '@/lib/constants';
-import { DiagnosticAnswers, STORAGE_KEY } from '@/types/diagnosis';
+import { DiagnosticAnswers, STORAGE_KEY, RESULT_STORAGE_KEY } from '@/types/diagnosis';
 import QuestionCard from '@/components/diagnostic/QuestionCard';
 import Button from '@/components/common/Button';
 import LayoutContainer from '@/components/common/LayoutContainer';
+import { submitDiagnosis } from '@/lib/api';
 
 export default function DiagnosticPage() {
   const router = useRouter();
   const [answers, setAnswers] = useState<DiagnosticAnswers>({});
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // マウント後にsessionStorageから読み込む（クライアントサイドのみ）
   useEffect(() => {
     const savedAnswers = sessionStorage.getItem(STORAGE_KEY);
     if (savedAnswers) {
       try {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setAnswers(JSON.parse(savedAnswers));
       } catch (error) {
         console.error('Failed to parse saved answers:', error);
       }
     }
-    setIsLoaded(true);
   }, []);
 
   // 回答が変更されるたびにsessionStorageに保存
@@ -41,9 +40,40 @@ export default function DiagnosticPage() {
   const isAllAnswered = QUESTIONS.every((q) => answers[`q${q.id}`] !== undefined);
 
   // 診断結果画面へ遷移
-  const handleSubmit = () => {
-    if (!isAllAnswered) return;
-    router.push('/result');
+  const handleSubmit = async () => {
+    if (!isAllAnswered || isSubmitting) return;
+
+    setIsSubmitting(true);
+
+    try {
+      // 回答データを整形
+      const requestAnswers = {
+        q1: answers['q1'],
+        q2: answers['q2'],
+        q3: answers['q3'],
+        q4: answers['q4'],
+        q5: answers['q5'],
+        q6: answers['q6'],
+        q7: answers['q7'],
+        q8: answers['q8'],
+        q9: answers['q9'],
+        q10: answers['q10'],
+      };
+
+      // API呼び出し
+      const result = await submitDiagnosis(requestAnswers);
+
+      // 診断結果をsessionStorageに保存
+      sessionStorage.setItem(RESULT_STORAGE_KEY, JSON.stringify(result));
+
+      // 結果画面へ遷移
+      router.push('/result');
+    } catch (error) {
+      console.error('診断APIの呼び出しに失敗しました:', error);
+      // エラーハンドリングは今回対応範囲外のため、ログ出力のみ
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -74,10 +104,15 @@ export default function DiagnosticPage() {
           <div className="flex justify-center">
             <Button
               onClick={handleSubmit}
-              disabled={!isAllAnswered}
+              disabled={!isAllAnswered || isSubmitting}
               size="lg"
             >
-              {isAllAnswered ? '診断する' : `残り ${QUESTIONS.length - Object.keys(answers).length} 問`}
+              {isSubmitting 
+                ? '送信中...' 
+                : isAllAnswered 
+                  ? '診断する' 
+                  : `残り ${QUESTIONS.length - Object.keys(answers).length} 問`
+              }
             </Button>
           </div>
         </div>

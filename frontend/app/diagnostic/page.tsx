@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { QUESTIONS } from '@/lib/constants';
 import { DiagnosticAnswers, STORAGE_KEY } from '@/types/diagnosis';
@@ -10,19 +10,21 @@ import LayoutContainer from '@/components/common/LayoutContainer';
 
 export default function DiagnosticPage() {
   const router = useRouter();
-  const [answers, setAnswers] = useState<DiagnosticAnswers>(() => {
-    if (typeof window === 'undefined') return {};
+  const [answers, setAnswers] = useState<DiagnosticAnswers>({});
+  const [isLoaded, setIsLoaded] = useState(false);
 
+  // マウント後にsessionStorageから読み込む（クライアントサイドのみ）
+  useEffect(() => {
     const savedAnswers = sessionStorage.getItem(STORAGE_KEY);
     if (savedAnswers) {
       try {
-        return JSON.parse(savedAnswers);
+        setAnswers(JSON.parse(savedAnswers));
       } catch (error) {
         console.error('Failed to parse saved answers:', error);
       }
     }
-    return {};
-  });
+    setIsLoaded(true);
+  }, []);
 
   // 回答が変更されるたびにsessionStorageに保存
   const handleAnswerChange = (questionId: number, value: number) => {
@@ -31,9 +33,7 @@ export default function DiagnosticPage() {
       [`q${questionId}`]: value,
     };
     setAnswers(newAnswers);
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newAnswers));
-    }
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newAnswers));
   };
 
   // 全問回答済みかチェック

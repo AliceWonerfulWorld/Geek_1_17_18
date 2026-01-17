@@ -11,6 +11,8 @@ import LayoutContainer from '@/components/common/LayoutContainer';
 export default function DiagnosticPage() {
   const router = useRouter();
   const [answers, setAnswers] = useState<DiagnosticAnswers>(() => {
+    if (typeof window === 'undefined') return {};
+
     const savedAnswers = sessionStorage.getItem(STORAGE_KEY);
     if (savedAnswers) {
       try {
@@ -29,7 +31,9 @@ export default function DiagnosticPage() {
       [`q${questionId}`]: value,
     };
     setAnswers(newAnswers);
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newAnswers));
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newAnswers));
+    }
   };
 
   // 全問回答済みかチェック

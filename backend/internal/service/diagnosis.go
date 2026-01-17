@@ -47,13 +47,15 @@ func (s *DiagnosisService) Calculate(req *model.DiagnosisRequest) (*model.Diagno
 // getRankAndComment はスコアに基づいてランクとコメントを算出
 func getRankAndComment(score int) (string, string) {
 	switch {
+	case score >= 90:
+		return "馬ッチング", "価値観や作業スタイルが完璧に一致しています！"
 	case score >= 80:
-		return "S", "価値観や作業スタイルが完璧に一致しています！"
+		return "かなり馬が合う", "価値観や作業スタイルがかなり近い相手です。"
 	case score >= 60:
-		return "A", "相性は良好です。協力して仕事を進められるでしょう。"
+		return "馬が合う", "比較的スムーズに協力し合える相性です。"
 	case score >= 40:
-		return "B", "まずまずの相性です。お互いの違いを理解し合うことが大切です。"
+		return "馬くいく", "歩み寄ることで良い関係が築けるでしょう。"
 	default:
-		return "C", "相性には改善の余地があります。コミュニケーションを大切にしましょう。"
+		return "馬の合う仲になれれば幸いです。", "これからお互いを知っていく段階のようです。"
 	}
 }

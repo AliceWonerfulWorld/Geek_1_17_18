@@ -1,7 +1,9 @@
 package service
 
 import (
+	"fmt"
 	"geek-backend/internal/model"
+	"math"
 )
 
 // DiagnosisService は診断のビジネスロジックを提供
@@ -12,20 +14,28 @@ func NewDiagnosisService() *DiagnosisService {
 	return &DiagnosisService{}
 }
 
+// TargetAnswers 比較対象となる仮想ユーザーの回答データ
+var TargetAnswers = map[string]int{
+	"q1": 3, "q2": 3, "q3": 3, "q4": 3, "q5": 3,
+	"q6": 3, "q7": 3, "q8": 3, "q9": 3, "q10": 3,
+}
+
 // Calculate は診断スコアを計算する
 func (s *DiagnosisService) Calculate(req *model.DiagnosisRequest) (*model.DiagnosisResult, error) {
-	// TODO: 実際の診断ロジックを実装
-	// 現在は仮の実装
-	score := len(req.Answers) * 10
-	if score > 100 {
-		score = 100
+	totalDiff := 0
+	questionCount := 10
+
+	// 各質問の回答差分の絶対値を合計
+	for i := 1; i <= questionCount; i++ {
+		key := fmt.Sprintf("q%d", i)
+		totalDiff += int(math.Abs(float64(req.Answers[key] - TargetAnswers[key])))
 	}
 
-	// スコアに基づいてランクを決定
-	rank := calculateRank(score)
+	// 0-100に正規化（最大差分 40）
+	score := 100 - (totalDiff * 100 / 40)
 
-	// スコアとランクに基づいてコメントを生成
-	comment := generateComment(score, rank)
+	// スコアに応じたランクとコメントを決定
+	rank, comment := getRankAndComment(score)
 
 	return &model.DiagnosisResult{
 		Score:   score,
@@ -34,30 +44,16 @@ func (s *DiagnosisService) Calculate(req *model.DiagnosisRequest) (*model.Diagno
 	}, nil
 }
 
-// calculateRank はスコアに基づいてランクを算出
-func calculateRank(score int) string {
+// getRankAndComment はスコアに基づいてランクとコメントを算出
+func getRankAndComment(score int) (string, string) {
 	switch {
 	case score >= 80:
-		return "S"
+		return "S", "価値観や作業スタイルが完璧に一致しています！"
 	case score >= 60:
-		return "A"
+		return "A", "相性は良好です。協力して仕事を進められるでしょう。"
 	case score >= 40:
-		return "B"
+		return "B", "まずまずの相性です。お互いの違いを理解し合うことが大切です。"
 	default:
-		return "C"
-	}
-}
-
-// generateComment はスコアとランクに基づいてコメントを生成
-func generateComment(score int, rank string) string {
-	switch rank {
-	case "S":
-		return "非常に相性が良いです！一緒に働くと最高のパフォーマンスが期待できます。"
-	case "A":
-		return "相性は良好です。協力して仕事を進められるでしょう。"
-	case "B":
-		return "まずまずの相性です。お互いの違いを理解し合うことが大切です。"
-	default:
-		return "相性には改善の余地があります。コミュニケーションを大切にしましょう。"
+		return "C", "相性には改善の余地があります。コミュニケーションを大切にしましょう。"
 	}
 }

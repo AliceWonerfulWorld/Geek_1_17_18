@@ -181,7 +181,7 @@ const getScoreRank = (score: number): RankKey => {
 };
 
 export default function ResultPage() {
-  const [score] = useState(90); // Sランク確認用に高スコアをセット
+  const [score] = useState(70); // Aランク確認用
   const rank = getScoreRank(score);
   const rankInfo = RANK_DATA[rank];
   const [showConfetti, setShowConfetti] = useState(false);
@@ -205,15 +205,16 @@ export default function ResultPage() {
 
   return (
     <div
-      className="flex min-h-screen items-start justify-center bg-no-repeat p-4 pt-6 sm:pt-10"
+      className={`flex min-h-screen items-start justify-center bg-no-repeat p-4 pt-6 sm:pt-10 transition-all ${rankVisible ? "animate-bg-fall" : ""}`}
       style={{
         backgroundImage: `url(${rankInfo.bgImage.src})`,
         backgroundSize: "cover",
         backgroundColor: "#f7f7f7",
-        backgroundPosition: "top center",
+        backgroundPosition: rankVisible ? "center -1050px" : "center 0px",
+        transitionDuration: rankVisible ? "2s" : "0s",
+        transitionTimingFunction: "ease-out",
       }}
     >
-      <HorseSprites />
       {showConfetti && <Confetti />}
       <main className="mt-2 sm:mt-6 flex flex-col items-center justify-center text-center w-full max-w-2xl px-5 py-5 sm:px-8 sm:py-7 bg-white/60 backdrop-blur rounded-3xl shadow-2xl">
         <div

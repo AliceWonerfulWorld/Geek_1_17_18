@@ -29,6 +29,16 @@ export interface DiagnosisResponse {
   score: number;
   rank: string;
   comment: string;
+  axisDetails?: AxisDetail[]; // 評価軸ごとの詳細（相性診断のみ）
+}
+
+//評価軸詳細の型定義
+export interface AxisDetail {
+  axis: string;
+  axisName: string;
+  scoreA: number;
+  scoreB: number;
+  compatibility: number;
 }
 
 //相性診断リクエストの型定義（2人分の回答）
@@ -66,3 +76,5 @@ export const ANSWERS_A_KEY = 'umachi:answersA';
 export const ANSWERS_B_KEY = 'umachi:answersB';
 export const MODE_KEY = 'umachi:mode';
 export const CURRENT_PERSON_KEY = 'umachi:currentPerson';
+export const DIAGNOSIS_CODE_KEY = 'umachi:diagnosisCode';
+export const COMPARE_CODE_KEY = 'umachi:compareCode';

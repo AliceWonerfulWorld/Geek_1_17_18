@@ -18,17 +18,17 @@ export default function QuestionCard({
 }: QuestionCardProps) {
   return (
     <Card>
-      <div className="mb-4">
-        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-          Q{questionNumber}
+      <div className="mb-6">
+        <span className="text-xs font-black text-blue-600 uppercase tracking-[0.2em] block mb-2">
+          QUESTION {questionNumber}
         </span>
-        <p className="mt-2 text-lg text-gray-900 dark:text-gray-100">
+        <p className="text-lg font-bold text-zinc-800 leading-relaxed">
           {question.text}
         </p>
       </div>
       
-      <div className="mt-6">
-        <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-3 px-1">
+      <div className="mt-8">
+        <div className="flex justify-between text-xs font-bold text-zinc-400 mb-4 px-2">
           <span>あてはまらない</span>
           <span>あてはまる</span>
         </div>

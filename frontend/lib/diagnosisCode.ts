@@ -43,15 +43,17 @@ export function parseDiagnosisCode(code: string): DiagnosisRequest['answers'] | 
  * @param answers チェック対象の回答データ
  * @returns 妥当な場合はtrue
  */
-function isValidAnswers(answers: any): answers is DiagnosisRequest['answers'] {
+function isValidAnswers(answers: unknown): answers is DiagnosisRequest['answers'] {
     if (!answers || typeof answers !== 'object') {
         return false;
     }
 
+    const answersObj = answers as Record<string, unknown>;
+
     // q1〜q10が全て存在し、1〜5の範囲内であることを確認
     for (let i = 1; i <= 10; i++) {
         const key = `q${i}` as keyof DiagnosisRequest['answers'];
-        const value = answers[key];
+        const value = answersObj[key];
 
         if (typeof value !== 'number' || value < 1 || value > 5) {
             return false;

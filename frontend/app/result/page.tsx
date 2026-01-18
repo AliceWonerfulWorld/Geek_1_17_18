@@ -217,9 +217,7 @@ export default function ResultPage() {
     >
       {showConfetti && <Confetti />}
       <main className="mt-2 sm:mt-6 flex flex-col items-center justify-center text-center w-full max-w-2xl px-5 py-5 sm:px-8 sm:py-7 bg-white/60 backdrop-blur rounded-3xl shadow-2xl">
-        <div
-          className={`inline-block px-6 py-2 rounded-full ${rankInfo.bg} mb-6`}
-        >
+        <div className={`inline-block px-6 py-2 rounded-full ${rankInfo.bg} mb-6`}>
           <p className="text-sm font-bold">診断結果</p>
         </div>
 

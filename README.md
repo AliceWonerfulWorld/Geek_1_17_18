@@ -27,12 +27,34 @@ UMA-CHI は、短い質問に答えるだけで
 .
 ├── backend/
 │   ├── go.mod
-│   └── main.go
+│   ├── main.go
+│   └── internal/
+│       ├── handler/
+│       │   ├── health.go
+│       │   └── diagnosis.go
+│       ├── service/
+│       │   └── diagnosis.go
+│       └── model/
+│           └── diagnosis.go
 ├── frontend/
-│   ├── package.json
-│   └── app/
+│   ├── app/
+│   │   ├── layout.tsx
+│   │   ├── globals.css
+│   │   ├── page.tsx
+│   │   ├── diagnosis/page.tsx
+│   │   └── result/page.tsx
+│   ├── components/
+│   │   ├── common/
+│   │   └── diagnosis/
+│   ├── lib/
+│   │   ├── api.ts
+│   │   └── constants.ts
+│   ├── types/
+│   │   └── diagnosis.ts
+│   └── package.json
 └── docs/
     └── requirements.md
+
 ```
 
 ---

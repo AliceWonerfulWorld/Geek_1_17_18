@@ -3,9 +3,9 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#FFFBEB] font-sans text-zinc-800 py-20">
-      
+
       <main className="flex w-full max-w-2xl flex-col items-center px-6 text-center">
-        
+
         {/* ロゴ */}
         <h1 className="mb-2 text-7xl font-[900] tracking-tighter sm:text-8xl bg-clip-text text-transparent bg-gradient-to-b from-zinc-900 to-zinc-600">
           UMA<span className="text-blue-600">-</span>CHI
@@ -20,17 +20,26 @@ export default function Home() {
         </div>
 
         {/* 診断ボタン（上部） */}
-        <div className="w-full max-w-xs mb-24">
+        <div className="w-full max-w-xs mb-8 space-y-4">
+          {/* 2人で診断するボタン */}
           <Link
-            href="/question"
+            href="/diagnostic?mode=two"
+            className="flex h-16 w-full items-center justify-center rounded-full bg-gradient-to-r from-pink-600 to-purple-600 text-xl font-black text-white shadow-[0_6px_0_0_#7e22ce] transition-all hover:translate-y-[2px] hover:shadow-[0_4px_0_0_#7e22ce] active:translate-y-[6px] active:shadow-none"
+          >
+            🐴🐴 2人で診断する
+          </Link>
+
+          {/* 1人で診断するボタン */}
+          <Link
+            href="/diagnostic"
             className="flex h-16 w-full items-center justify-center rounded-full bg-blue-600 text-xl font-black text-white shadow-[0_6px_0_0_#1e40af] transition-all hover:translate-y-[2px] hover:shadow-[0_4px_0_0_#1e40af] active:translate-y-[6px] active:shadow-none"
           >
             診断スタート
           </Link>
         </div>
 
-        <div className="w-full space-y-20 text-left">
-          
+        <div className="w-full space-y-20 text-left mb-16">
+
           {/* アプリ概要 */}
           <section className="relative">
             <h2 className="mb-6 text-center text-2xl font-black text-zinc-800 flex items-center justify-center gap-3">
@@ -69,13 +78,22 @@ export default function Home() {
         </div>
 
         {/* 診断ボタン（下部） */}
-        <div className="mt-28 w-full border-t-2 border-dashed border-zinc-200 pt-16 flex flex-col items-center">
+        <div className="mt-20 w-full border-t-2 border-dashed border-zinc-200 pt-16 flex flex-col items-center">
           <p className="mb-6 text-sm font-bold text-zinc-400">
-            ＼ まずは自分で診断してみよう！ ／
+            ＼ まずは診断してみよう！ ／
           </p>
-          <div className="w-full max-w-xs">
+          <div className="w-full max-w-xs space-y-4">
+            {/* 2人で診断するボタン */}
             <Link
-              href="/question"
+              href="/diagnostic?mode=two"
+              className="flex h-16 w-full items-center justify-center rounded-full bg-gradient-to-r from-pink-600 to-purple-600 text-xl font-black text-white shadow-[0_6px_0_0_#7e22ce] transition-all hover:translate-y-[2px] hover:shadow-[0_4px_0_0_#7e22ce] active:translate-y-[6px] active:shadow-none"
+            >
+              🐴🐴 2人で診断する
+            </Link>
+
+            {/* 1人で診断するボタン */}
+            <Link
+              href="/diagnostic"
               className="flex h-16 w-full items-center justify-center rounded-full bg-blue-600 text-xl font-black text-white shadow-[0_6px_0_0_#1e40af] transition-all hover:translate-y-[2px] hover:shadow-[0_4px_0_0_#1e40af] active:translate-y-[6px] active:shadow-none"
             >
               診断スタート

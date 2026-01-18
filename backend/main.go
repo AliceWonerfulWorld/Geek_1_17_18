@@ -32,14 +32,17 @@ func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
 func main() {
 	// サービス初期化
 	diagnosisService := service.NewDiagnosisService()
+	compatibilityService := service.NewCompatibilityService()
 
 	// ハンドラ初期化
 	healthHandler := handler.NewHealthHandler()
 	diagnosisHandler := handler.NewDiagnosisHandler(diagnosisService)
+	compatibilityHandler := handler.NewCompatibilityHandler(compatibilityService)
 
 	// ルーティング設定（CORSミドルウェアを適用）
 	http.HandleFunc("/health", corsMiddleware(healthHandler.Handle))
 	http.HandleFunc("/diagnosis", corsMiddleware(diagnosisHandler.Handle))
+	http.HandleFunc("/compatibility", corsMiddleware(compatibilityHandler.Handle))
 
 	// サーバー起動
 	log.Println("Server starting on :8080")

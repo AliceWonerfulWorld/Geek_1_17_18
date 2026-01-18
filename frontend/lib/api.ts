@@ -23,3 +23,29 @@ export async function submitDiagnosis(answers: DiagnosisRequest['answers']): Pro
   const data: DiagnosisResponse = await response.json();
   return data;
 }
+
+/**
+ * 相性診断APIを呼び出す
+ * @param answersA Aさんの回答データ（q1〜q10）
+ * @param answersB Bさんの回答データ（q1〜q10）
+ * @returns 相性診断結果（score, rank, comment）
+ */
+export async function submitCompatibility(
+  answersA: DiagnosisRequest['answers'],
+  answersB: DiagnosisRequest['answers']
+): Promise<DiagnosisResponse> {
+  const response = await fetch(`${API_BASE_URL}/compatibility`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ answersA, answersB }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+  }
+
+  const data: DiagnosisResponse = await response.json();
+  return data;
+}

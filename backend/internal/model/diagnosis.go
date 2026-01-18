@@ -7,9 +7,9 @@ type DiagnosisRequest struct {
 
 // DiagnosisResult は診断結果のビジネスロジック構造体
 type DiagnosisResult struct {
-	Score   int
-	Rank    string
-	Comment string
+	Score   int    `json:"score"`
+	Rank    string `json:"rank"`
+	Comment string `json:"comment"`
 }
 
 // DiagnosisResponse は診断結果のレスポンス

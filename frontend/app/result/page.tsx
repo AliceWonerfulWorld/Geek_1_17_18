@@ -2,10 +2,18 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { STORAGE_KEY, RESULT_STORAGE_KEY, DiagnosisResponse } from '@/types/diagnosis';
+import Link from 'next/link';
+import { STORAGE_KEY, RESULT_STORAGE_KEY, MODE_KEY, DiagnosisResponse } from '@/types/diagnosis';
 
 export default function ResultPage() {
   const router = useRouter();
+
+  // 診断モードを保存（2人モードかどうか）
+  const [isTwoPersonMode] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    const mode = sessionStorage.getItem(MODE_KEY);
+    return mode === 'two';
+  });
 
   // sessionStorageから回答データをクリア（初期化時に実行）
   useState(() => {
@@ -112,16 +120,22 @@ export default function ResultPage() {
             </div>
 
             {/* もう一度診断するボタン */}
-            <div className="w-full max-w-xs">
+            <div className="w-full max-w-xs space-y-4">
               <p className="mb-4 text-sm font-bold text-zinc-400 text-center">
                 ＼ 他の人との相性も試してみよう！ ／
               </p>
               <button
-                onClick={() => router.push('/diagnostic')}
+                onClick={() => router.push(isTwoPersonMode ? '/diagnostic?mode=two' : '/diagnostic')}
                 className="flex h-16 w-full items-center justify-center rounded-full bg-blue-600 text-xl font-black text-white shadow-[0_6px_0_0_#1e40af] transition-all hover:translate-y-[2px] hover:shadow-[0_4px_0_0_#1e40af] active:translate-y-[6px] active:shadow-none"
               >
                 もう一度診断する
               </button>
+              <Link
+                href="/"
+                className="flex h-14 w-full items-center justify-center rounded-full bg-zinc-200 text-lg font-black text-zinc-700 shadow-[0_4px_0_0_#a1a1aa] transition-all hover:translate-y-[2px] hover:shadow-[0_2px_0_0_#a1a1aa] active:translate-y-[4px] active:shadow-none"
+              >
+                タイトルに戻る
+              </Link>
             </div>
           </>
         ) : (
@@ -132,12 +146,22 @@ export default function ResultPage() {
               診断結果が見つかりませんでした。<br />
               診断画面からやり直してください。
             </p>
-            <button
-              onClick={() => router.push('/diagnostic')}
-              className="inline-flex h-14 items-center justify-center rounded-full bg-blue-600 px-8 text-lg font-black text-white shadow-[0_6px_0_0_#1e40af] transition-all hover:translate-y-[2px] hover:shadow-[0_4px_0_0_#1e40af] active:translate-y-[6px] active:shadow-none"
-            >
-              診断画面へ戻る
-            </button>
+            <div className="space-y-3">
+              <button
+                onClick={() => router.push('/diagnostic')}
+                className="inline-flex h-14 items-center justify-center rounded-full bg-blue-600 px-8 text-lg font-black text-white shadow-[0_6px_0_0_#1e40af] transition-all hover:translate-y-[2px] hover:shadow-[0_4px_0_0_#1e40af] active:translate-y-[6px] active:shadow-none"
+              >
+                診断画面へ戻る
+              </button>
+              <div>
+                <Link
+                  href="/"
+                  className="inline-flex h-12 items-center justify-center rounded-full bg-zinc-200 px-8 text-base font-black text-zinc-700 shadow-[0_4px_0_0_#a1a1aa] transition-all hover:translate-y-[2px] hover:shadow-[0_2px_0_0_#a1a1aa] active:translate-y-[4px] active:shadow-none"
+                >
+                  タイトルに戻る
+                </Link>
+              </div>
+            </div>
           </div>
         )}
       </main>

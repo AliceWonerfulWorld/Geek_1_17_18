@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { QUESTIONS } from '@/lib/questions';
 import { DiagnosticAnswers, STORAGE_KEY, RESULT_STORAGE_KEY, ANSWERS_A_KEY, ANSWERS_B_KEY, MODE_KEY, CURRENT_PERSON_KEY } from '@/types/diagnosis';
@@ -9,7 +9,7 @@ import Button from '@/components/common/Button';
 import LayoutContainer from '@/components/common/LayoutContainer';
 import { submitDiagnosis, submitCompatibility } from '@/lib/api';
 
-export default function DiagnosticPage() {
+function DiagnosticContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const mode = searchParams.get('mode'); // 'two' or null
@@ -44,6 +44,7 @@ export default function DiagnosticPage() {
       }
     } else {
       // 1人モード：既存の動作
+      sessionStorage.setItem(MODE_KEY, 'one'); // 1人モードを明示的に保存
       const savedAnswers = sessionStorage.getItem(STORAGE_KEY);
       if (savedAnswers) {
         try {
@@ -258,5 +259,17 @@ export default function DiagnosticPage() {
         </div>
       </LayoutContainer>
     </div>
+  );
+}
+
+export default function DiagnosticPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 dark:bg-black py-12 px-4 flex items-center justify-center">
+        <div className="text-gray-600 dark:text-gray-400">読み込み中...</div>
+      </div>
+    }>
+      <DiagnosticContent />
+    </Suspense>
   );
 }

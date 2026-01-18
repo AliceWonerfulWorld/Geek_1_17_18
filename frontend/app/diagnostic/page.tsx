@@ -97,6 +97,8 @@ function DiagnosticContent() {
         console.error('Failed to parse saved answers B:', error);
       }
     }
+    // スクロールをトップに戻す
+    document.documentElement.scrollTop = 0;
   };
 
   // 診断結果画面へ遷移
@@ -217,23 +219,30 @@ function DiagnosticContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-black py-12 px-4">
-      <LayoutContainer>
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+    <div className="min-h-screen bg-[#FFFBEB] font-sans text-zinc-800 py-12 px-4">
+      <LayoutContainer maxWidth="2xl">
+        <div className="text-center mb-12">
+          <h1 className="text-3xl font-black text-zinc-900 mb-4 sm:text-4xl">
             {getTitle()}
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            すべての質問に回答してください（{Object.keys(answers).length}/{QUESTIONS.length}）
-          </p>
-          {isTwoPersonMode && (
-            <p className="text-sm text-blue-600 dark:text-blue-400 mt-2 font-bold">
-              {currentPerson === 'A' ? '🐴 まずはAさんが回答してください' : '🐴 次はBさんが回答してください'}
+          <div className="inline-block rounded-full bg-white px-6 py-2 border-2 border-zinc-50 shadow-sm">
+            <p className="text-zinc-600 font-bold">
+              すべての質問に回答してください
+              <span className="ml-2 text-blue-600">
+                ({Object.keys(answers).length}/{QUESTIONS.length})
+              </span>
             </p>
+          </div>
+          {isTwoPersonMode && (
+            <div className="mt-4">
+              <span className="inline-block bg-blue-100 text-blue-700 font-black px-4 py-1 rounded-full text-sm">
+                {currentPerson === 'A' ? '🐴 Aさんのターン' : '🐴 Bさんのターン'}
+              </span>
+            </div>
           )}
         </div>
 
-        <div className="space-y-6 mb-8">
+        <div className="space-y-8 mb-32">
           {QUESTIONS.map((question, index) => (
             <QuestionCard
               key={question.id}
@@ -245,15 +254,18 @@ function DiagnosticContent() {
           ))}
         </div>
 
-        <div className="sticky bottom-0 bg-gray-50 dark:bg-black py-6 border-t border-gray-200 dark:border-gray-800">
-          <div className="flex justify-center">
-            <Button
-              onClick={handleButtonClick}
-              disabled={!isAllAnswered || isSubmitting}
-              size="lg"
-            >
-              {getButtonText()}
-            </Button>
+        <div className="fixed bottom-0 left-0 right-0 bg-[#FFFBEB]/90 backdrop-blur-sm py-6 border-t-2 border-dashed border-zinc-200 z-10">
+          <div className="max-w-2xl mx-auto px-4 flex justify-center">
+            <div className="w-full max-w-sm">
+              <Button
+                onClick={handleButtonClick}
+                disabled={!isAllAnswered || isSubmitting}
+                size="lg"
+                className="w-full text-xl shadow-[0_6px_0_0_#1e40af]"
+              >
+                {getButtonText()}
+              </Button>
+            </div>
           </div>
         </div>
       </LayoutContainer>
@@ -264,8 +276,8 @@ function DiagnosticContent() {
 export default function DiagnosticPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 dark:bg-black py-12 px-4 flex items-center justify-center">
-        <div className="text-gray-600 dark:text-gray-400">読み込み中...</div>
+      <div className="min-h-screen bg-[#FFFBEB] py-12 px-4 flex items-center justify-center">
+        <div className="text-zinc-600 font-bold animate-pulse">読み込み中...</div>
       </div>
     }>
       <DiagnosticContent />

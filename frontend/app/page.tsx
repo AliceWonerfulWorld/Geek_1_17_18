@@ -1,6 +1,12 @@
+"use client";
+
 import Link from "next/link";
+import { playMouseClickSound } from "@/lib/sound";
 
 export default function Home() {
+  const handleDiagnosticClick = async () => {
+    await playMouseClickSound();
+  };
   return (
     <div className="relative flex min-h-screen flex-col items-center bg-[#FFFBEB] font-sans text-zinc-800 overflow-x-hidden">
 
@@ -50,6 +56,7 @@ export default function Home() {
           {/* 1人で診断するボタン */}
           <Link
             href="/diagnostic"
+            onClick={handleDiagnosticClick}
             className="flex h-16 w-full items-center justify-center rounded-full bg-blue-600 text-xl font-black text-white shadow-[0_6px_0_0_#1e40af] transition-all hover:translate-y-[2px] hover:shadow-[0_4px_0_0_#1e40af] active:translate-y-[6px] active:shadow-none"
           >
             診断スタート
@@ -130,6 +137,7 @@ export default function Home() {
             {/* 1人で診断するボタン */}
             <Link
               href="/diagnostic"
+              onClick={handleDiagnosticClick}
               className="flex h-16 w-full items-center justify-center rounded-full bg-blue-600 text-xl font-black text-white shadow-[0_6px_0_0_#1e40af] transition-all hover:translate-y-[2px] hover:shadow-[0_4px_0_0_#1e40af] active:translate-y-[6px] active:shadow-none"
             >
               診断スタート

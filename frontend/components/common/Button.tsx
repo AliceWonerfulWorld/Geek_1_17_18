@@ -1,8 +1,9 @@
-import { ButtonHTMLAttributes, ReactNode } from 'react';
+import { ButtonHTMLAttributes, ReactNode } from "react";
+import { playClickSound } from "@/lib/sound";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "primary" | "secondary" | "ghost";
+  size?: "sm" | "md" | "lg";
   children: ReactNode;
 }
 
@@ -12,15 +13,23 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
  * size: sm (小), md (中), lg (大)
  */
 export default function Button({
-  variant = 'primary',
-  size = 'md',
+  variant = "primary",
+  size = "md",
   children,
-  className = '',
+  className = "",
   disabled,
+  onClick,
   ...props
 }: ButtonProps) {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!disabled) {
+      playClickSound();
+    }
+    onClick?.(e);
+  };
+
   const baseStyles = 'rounded-full font-black transition-all flex items-center justify-center';
-  
+
   const variantStyles = {
     primary: disabled
       ? 'bg-zinc-300 text-white cursor-not-allowed shadow-none'
@@ -43,6 +52,7 @@ export default function Button({
     <button
       className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
       disabled={disabled}
+      onClick={handleClick}
       {...props}
     >
       {children}

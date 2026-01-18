@@ -3,11 +3,12 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { QUESTIONS } from '@/lib/questions';
-import { DiagnosticAnswers, STORAGE_KEY, RESULT_STORAGE_KEY, ANSWERS_A_KEY, ANSWERS_B_KEY, MODE_KEY, CURRENT_PERSON_KEY } from '@/types/diagnosis';
+import { DiagnosticAnswers, STORAGE_KEY, RESULT_STORAGE_KEY, ANSWERS_A_KEY, ANSWERS_B_KEY, MODE_KEY, CURRENT_PERSON_KEY, DIAGNOSIS_CODE_KEY, COMPARE_CODE_KEY } from '@/types/diagnosis';
 import QuestionCard from '@/components/diagnostic/QuestionCard';
 import Button from '@/components/common/Button';
 import LayoutContainer from '@/components/common/LayoutContainer';
 import { submitDiagnosis, submitCompatibility } from '@/lib/api';
+import { generateDiagnosisCode, parseDiagnosisCode } from '@/lib/diagnosisCode';
 
 function DiagnosticContent() {
   const router = useRouter();
@@ -18,6 +19,8 @@ function DiagnosticContent() {
   const [answers, setAnswers] = useState<DiagnosticAnswers>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentPerson, setCurrentPerson] = useState<'A' | 'B'>('A'); // 2人モード時の現在回答者
+  const [compareCode, setCompareCode] = useState(''); // 比較用診断コード（1人モードのみ）
+  const [codeError, setCodeError] = useState(''); // コードエラーメッセージ
 
   // マウント後にsessionStorageから読み込む（クライアントサイドのみ）
   useEffect(() => {
@@ -45,6 +48,13 @@ function DiagnosticContent() {
     } else {
       // 1人モード：既存の動作
       sessionStorage.setItem(MODE_KEY, 'one'); // 1人モードを明示的に保存
+
+      // 診断コードを読み込む
+      const savedCode = sessionStorage.getItem(COMPARE_CODE_KEY);
+      if (savedCode) {
+        setCompareCode(savedCode);
+      }
+
       const savedAnswers = sessionStorage.getItem(STORAGE_KEY);
       if (savedAnswers) {
         try {
@@ -161,7 +171,7 @@ function DiagnosticContent() {
         // 結果画面へ遷移
         router.push('/result');
       } else {
-        // 1人モード：既存の診断API呼び出し
+        // 1人モード
         const requestAnswers = {
           q1: answers['q1'],
           q2: answers['q2'],
@@ -175,14 +185,42 @@ function DiagnosticContent() {
           q10: answers['q10'],
         };
 
-        // API呼び出し
-        const result = await submitDiagnosis(requestAnswers);
+        // 診断コードが入力されている場合は相性診断
+        if (compareCode) {
+          const compareAnswers = parseDiagnosisCode(compareCode);
 
-        // 診断結果をsessionStorageに保存
-        sessionStorage.setItem(RESULT_STORAGE_KEY, JSON.stringify(result));
+          if (!compareAnswers) {
+            setCodeError('無効な診断コードです。正しいコードを入力してください。');
+            setIsSubmitting(false);
+            return;
+          }
 
-        // 結果画面へ遷移
-        router.push('/result');
+          // 相性診断API呼び出し
+          const result = await submitCompatibility(compareAnswers, requestAnswers);
+
+          // 診断コードを生成してsessionStorageに保存
+          const diagnosisCode = generateDiagnosisCode(requestAnswers);
+          sessionStorage.setItem(DIAGNOSIS_CODE_KEY, diagnosisCode);
+
+          // 診断結果をsessionStorageに保存
+          sessionStorage.setItem(RESULT_STORAGE_KEY, JSON.stringify(result));
+
+          // 結果画面へ遷移
+          router.push('/result');
+        } else {
+          // 通常の1人診断API呼び出し
+          const result = await submitDiagnosis(requestAnswers);
+
+          // 診断コードを生成してsessionStorageに保存
+          const diagnosisCode = generateDiagnosisCode(requestAnswers);
+          sessionStorage.setItem(DIAGNOSIS_CODE_KEY, diagnosisCode);
+
+          // 診断結果をsessionStorageに保存
+          sessionStorage.setItem(RESULT_STORAGE_KEY, JSON.stringify(result));
+
+          // 結果画面へ遷移
+          router.push('/result');
+        }
       }
     } catch (error) {
       console.error('診断APIの呼び出しに失敗しました:', error);
@@ -243,6 +281,47 @@ function DiagnosticContent() {
         </div>
 
         <div className="space-y-8 mb-32">
+        {/* 診断コード入力欄（1人モードのみ） */}
+        {!isTwoPersonMode && (
+          <div className="mb-8 p-6 bg-purple-50 dark:bg-purple-900/20 rounded-2xl border-2 border-purple-200 dark:border-purple-800">
+            <div className="flex items-start gap-3 mb-3">
+              <div className="text-2xl">🔑</div>
+              <div className="flex-1">
+                <h3 className="text-lg font-black text-purple-900 dark:text-purple-100 mb-1">
+                  診断コードで相性診断（オプション）
+                </h3>
+                <p className="text-sm text-purple-700 dark:text-purple-300 font-bold">
+                  友達の診断コードを入力すると、その人との相性を診断できます
+                </p>
+              </div>
+            </div>
+            <input
+              type="text"
+              placeholder="UMA-xxxxx（空欄でもOK）"
+              value={compareCode}
+              onChange={(e) => {
+                const value = e.target.value;
+                setCompareCode(value);
+                setCodeError('');
+                // sessionStorageに保存
+                if (value) {
+                  sessionStorage.setItem(COMPARE_CODE_KEY, value);
+                } else {
+                  sessionStorage.removeItem(COMPARE_CODE_KEY);
+                }
+              }}
+              className="w-full px-4 py-3 rounded-lg border-2 border-purple-300 dark:border-purple-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+            {codeError && (
+              <p className="mt-2 text-sm text-red-600 dark:text-red-400 font-bold">
+                ⚠️ {codeError}
+              </p>
+            )}
+          </div>
+        )}
+
+        <div className="space-y-6 mb-8">
+
           {QUESTIONS.map((question, index) => (
             <QuestionCard
               key={question.id}

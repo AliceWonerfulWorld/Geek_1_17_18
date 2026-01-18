@@ -319,7 +319,7 @@ function DiagnosticContent() {
           </div>
         )}
 
-        <div className="space-y-6 mb-8">
+        <div className="space-y-6 pb-32">
           {QUESTIONS.map((question, index) => (
             <QuestionCard
               key={question.id}

@@ -3,9 +3,9 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className="relative flex min-h-screen flex-col items-center bg-[#FFFBEB] font-sans text-zinc-800 overflow-x-hidden">
-      
+
       {/* 背景の馬：濃度を0.3(30%)で全デバイス固定 */}
-      <div 
+      <div
         className="fixed inset-0 z-0 pointer-events-none opacity-[0.3]"
         style={{
           backgroundImage: 'url("/background.png")',
@@ -16,15 +16,15 @@ export default function Home() {
       />
 
       <main className="relative z-10 flex w-full flex-col items-center py-20 px-6 text-center">
-        
+
         {/* アプリ名：ロゴをタイトルの右下に添える */}
         <div className="mb-8 flex items-end justify-center">
           <h1 className="text-7xl font-[1000] tracking-tighter text-zinc-900 sm:text-8xl flex items-end gap-1">
             UMA<span className="text-blue-600">-</span>CHI
-            <img 
-              src="/logo-uma.png" 
-              alt="Logo" 
-              className="h-8 w-8 sm:h-16 sm:w-16 object-contain mb-1 sm:mb-2 transition-transform hover:scale-110" 
+            <img
+              src="/logo-uma.png"
+              alt="Logo"
+              className="h-8 w-8 sm:h-16 sm:w-16 object-contain mb-1 sm:mb-2 transition-transform hover:scale-110"
             />
           </h1>
         </div>
@@ -38,9 +38,18 @@ export default function Home() {
         </div>
 
         {/* 診断ボタン（上部） */}
-        <div className="w-full max-w-xs mb-32">
+        <div className="w-full max-w-xs mb-16 space-y-4">
+          {/* 2人で診断するボタン */}
           <Link
-            href="/question"
+            href="/diagnostic?mode=two"
+            className="flex h-16 w-full items-center justify-center rounded-full bg-gradient-to-r from-pink-600 to-purple-600 text-xl font-black text-white shadow-[0_6px_0_0_#7e22ce] transition-all hover:translate-y-[2px] hover:shadow-[0_4px_0_0_#7e22ce] active:translate-y-[6px] active:shadow-none"
+          >
+            🐴🐴 2人で診断する
+          </Link>
+
+          {/* 1人で診断するボタン */}
+          <Link
+            href="/diagnostic"
             className="flex h-16 w-full items-center justify-center rounded-full bg-blue-600 text-xl font-black text-white shadow-[0_6px_0_0_#1e40af] transition-all hover:translate-y-[2px] hover:shadow-[0_4px_0_0_#1e40af] active:translate-y-[6px] active:shadow-none"
           >
             診断スタート
@@ -52,7 +61,7 @@ export default function Home() {
           <h2 className="mb-12 text-center text-3xl sm:text-5xl font-[1000] text-zinc-800">
             診断の流れ
           </h2>
-          
+
           <div className="flex flex-col gap-8 lg:flex-row lg:justify-center">
             {/* 01. 診断回答 */}
             <div className="flex flex-row lg:flex-col items-center bg-white rounded-[2.5rem] p-6 lg:p-10 shadow-[0_10px_0_0_#E5E7EB] border-2 border-zinc-50 w-full lg:max-w-[400px] h-[160px] lg:h-auto transition-all hover:shadow-none">
@@ -105,16 +114,27 @@ export default function Home() {
         </section>
 
         {/* 下部の診断導線 */}
-        <div className="mt-12 w-full max-w-xs flex flex-col items-center">
-          <p className="mb-4 text-sm font-bold text-zinc-400">
-            ＼ まずは自分で診断してみよう！ ／
+        <div className="mt-12 w-full border-t-2 border-dashed border-zinc-200 pt-16 flex flex-col items-center">
+          <p className="mb-6 text-sm font-bold text-zinc-400">
+            ＼ まずは診断してみよう！ ／
           </p>
-          <Link
-            href="/question"
-            className="flex h-16 w-full items-center justify-center rounded-full bg-blue-600 text-xl font-black text-white shadow-[0_6px_0_0_#1e40af] transition-all hover:translate-y-[2px] hover:shadow-[0_4px_0_0_#1e40af] active:translate-y-[6px] active:shadow-none"
-          >
-            診断スタート
-          </Link>
+          <div className="w-full max-w-xs space-y-4">
+            {/* 2人で診断するボタン */}
+            <Link
+              href="/diagnostic?mode=two"
+              className="flex h-16 w-full items-center justify-center rounded-full bg-gradient-to-r from-pink-600 to-purple-600 text-xl font-black text-white shadow-[0_6px_0_0_#7e22ce] transition-all hover:translate-y-[2px] hover:shadow-[0_4px_0_0_#7e22ce] active:translate-y-[6px] active:shadow-none"
+            >
+              🐴🐴 2人で診断する
+            </Link>
+
+            {/* 1人で診断するボタン */}
+            <Link
+              href="/diagnostic"
+              className="flex h-16 w-full items-center justify-center rounded-full bg-blue-600 text-xl font-black text-white shadow-[0_6px_0_0_#1e40af] transition-all hover:translate-y-[2px] hover:shadow-[0_4px_0_0_#1e40af] active:translate-y-[6px] active:shadow-none"
+            >
+              診断スタート
+            </Link>
+          </div>
         </div>
 
         {/* フッター */}

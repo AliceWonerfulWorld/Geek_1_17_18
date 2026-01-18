@@ -2,18 +2,18 @@ package model
 
 // DiagnosisRequest は診断リクエストの構造体
 type DiagnosisRequest struct {
-	Answers []Answer `json:"answers"`
+	Answers map[string]int `json:"answers"`
 }
 
-// Answer は質問への回答
-type Answer struct {
-	QuestionID int    `json:"question_id"`
-	Value      string `json:"value"`
-}
-
-// DiagnosisResult は診断結果の構造体
+// DiagnosisResult は診断結果のビジネスロジック構造体
 type DiagnosisResult struct {
-	Score   int    `json:"score"`   // 相性スコア（0〜100）
-	Rank    string `json:"rank"`    // 相性ランク（文字列）
-	Comment string `json:"comment"` // コメント（文字列）
+	Score   int    `json:"score"`
+	Rank    string `json:"rank"`
+	Comment string `json:"comment"`
+}
+
+// DiagnosisResponse は診断結果のレスポンス
+type DiagnosisResponse struct {
+	Score  int    `json:"score"`
+	Reason string `json:"reason"`
 }

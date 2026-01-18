@@ -1,9 +1,9 @@
 import Button from '@/components/common/Button';
 
 interface ScaleSelectorProps {
-  questionId: number;
+  questionId: string | number;
   selectedValue: number | undefined;
-  onChange: (questionId: number, value: number) => void;
+  onChange: (questionId: string | number, value: number) => void;
 }
 
 //1-5の5段階評価を数字ボタンで選択するコンポーネント

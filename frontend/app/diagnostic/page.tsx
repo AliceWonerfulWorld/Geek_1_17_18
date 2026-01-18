@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { QUESTIONS } from '@/lib/constants';
+import { QUESTIONS } from '@/lib/questions';
 import { DiagnosticAnswers, STORAGE_KEY, RESULT_STORAGE_KEY } from '@/types/diagnosis';
 import QuestionCard from '@/components/diagnostic/QuestionCard';
 import Button from '@/components/common/Button';
@@ -27,17 +27,17 @@ export default function DiagnosticPage() {
   }, []);
 
   // 回答が変更されるたびにsessionStorageに保存
-  const handleAnswerChange = (questionId: number, value: number) => {
+  const handleAnswerChange = (questionId: string | number, value: number) => {
     const newAnswers = {
       ...answers,
-      [`q${questionId}`]: value,
+      [questionId]: value,
     };
     setAnswers(newAnswers);
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newAnswers));
   };
 
   // 全問回答済みかチェック
-  const isAllAnswered = QUESTIONS.every((q) => answers[`q${q.id}`] !== undefined);
+  const isAllAnswered = QUESTIONS.every((q) => answers[q.id] !== undefined);
 
   // 診断結果画面へ遷移
   const handleSubmit = async () => {
@@ -94,7 +94,7 @@ export default function DiagnosticPage() {
               key={question.id}
               question={question}
               questionNumber={index + 1}
-              selectedValue={answers[`q${question.id}`]}
+              selectedValue={answers[question.id]}
               onChange={handleAnswerChange}
             />
           ))}

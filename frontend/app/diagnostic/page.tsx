@@ -151,10 +151,9 @@ function DiagnosticContent() {
         // 診断結果をsessionStorageに保存
         sessionStorage.setItem(RESULT_STORAGE_KEY, JSON.stringify(result));
 
-        // 2人モード用のsessionStorageをクリア
+        // 2人モード用のsessionStorageをクリア（MODE_KEYは残す）
         sessionStorage.removeItem(ANSWERS_A_KEY);
         sessionStorage.removeItem(ANSWERS_B_KEY);
-        sessionStorage.removeItem(MODE_KEY);
         sessionStorage.removeItem(CURRENT_PERSON_KEY);
 
         // 結果画面へ遷移

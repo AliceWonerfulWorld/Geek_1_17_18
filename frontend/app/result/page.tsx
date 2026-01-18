@@ -125,7 +125,12 @@ export default function ResultPage() {
                 ＼ 他の人との相性も試してみよう！ ／
               </p>
               <button
-                onClick={() => router.push(isTwoPersonMode ? '/diagnostic?mode=two' : '/diagnostic')}
+                onClick={() => {
+                  // 診断モードを保持したまま診断画面へ遷移
+                  const url = isTwoPersonMode ? '/diagnostic?mode=two' : '/diagnostic';
+                  // MODE_KEYはクリアせず、診断ページで再設定される
+                  router.push(url);
+                }}
                 className="flex h-16 w-full items-center justify-center rounded-full bg-blue-600 text-xl font-black text-white shadow-[0_6px_0_0_#1e40af] transition-all hover:translate-y-[2px] hover:shadow-[0_4px_0_0_#1e40af] active:translate-y-[6px] active:shadow-none"
               >
                 もう一度診断する

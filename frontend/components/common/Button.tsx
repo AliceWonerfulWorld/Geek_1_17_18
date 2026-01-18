@@ -27,24 +27,25 @@ export default function Button({
     }
     onClick?.(e);
   };
-  const baseStyles = "rounded-lg font-semibold transition-all duration-200";
+
+  const baseStyles = 'rounded-full font-black transition-all flex items-center justify-center';
 
   const variantStyles = {
     primary: disabled
-      ? "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed"
-      : "bg-blue-500 text-white shadow-lg hover:bg-blue-600 hover:scale-105 cursor-pointer",
+      ? 'bg-zinc-300 text-white cursor-not-allowed shadow-none'
+      : 'bg-blue-600 text-white shadow-[0_6px_0_0_#1e40af] hover:translate-y-[2px] hover:shadow-[0_4px_0_0_#1e40af] active:translate-y-[6px] active:shadow-none',
     secondary: disabled
-      ? "bg-gray-100 dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 cursor-not-allowed"
-      : "bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-blue-400 hover:scale-105",
+      ? 'bg-zinc-100 text-zinc-400 border-2 border-zinc-200 cursor-not-allowed'
+      : 'bg-white text-zinc-600 border-2 border-zinc-50 shadow-[0_4px_0_0_#E5E7EB] hover:translate-y-[2px] hover:shadow-[0_2px_0_0_#E5E7EB] active:translate-y-[4px] active:shadow-none',
     ghost: disabled
-      ? "text-gray-400 dark:text-gray-600 cursor-not-allowed"
-      : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800",
+      ? 'text-zinc-400 cursor-not-allowed'
+      : 'text-zinc-600 hover:bg-zinc-100',
   };
 
   const sizeStyles = {
-    sm: "px-3 py-1.5 text-sm",
-    md: "px-4 py-2 text-base",
-    lg: "px-8 py-4 text-lg",
+    sm: 'h-10 px-4 text-sm',
+    md: 'h-12 px-6 text-base',
+    lg: 'h-16 px-10 text-xl',
   };
 
   return (

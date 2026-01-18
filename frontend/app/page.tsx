@@ -8,17 +8,35 @@ export default function Home() {
     await playMouseClickSound();
   };
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#FFFBEB] font-sans text-zinc-800 py-20">
+    <div className="relative flex min-h-screen flex-col items-center bg-[#FFFBEB] font-sans text-zinc-800 overflow-x-hidden">
 
-      <main className="flex w-full max-w-2xl flex-col items-center px-6 text-center">
+      {/* 背景の馬：濃度を0.3(30%)で全デバイス固定 */}
+      <div
+        className="fixed inset-0 z-0 pointer-events-none opacity-[0.3]"
+        style={{
+          backgroundImage: 'url("/background.png")',
+          backgroundSize: 'contain',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
 
-        {/* ロゴ */}
-        <h1 className="mb-2 text-7xl font-[900] tracking-tighter sm:text-8xl bg-clip-text text-transparent bg-gradient-to-b from-zinc-900 to-zinc-600">
-          UMA<span className="text-blue-600">-</span>CHI
-        </h1>
+      <main className="relative z-10 flex w-full flex-col items-center py-20 px-6 text-center">
 
-        {/* キャッチコピー */}
-        <div className="relative mb-12 rounded-2xl bg-white px-8 py-4 shadow-[0_4px_0_0_#E5E7EB] border-2 border-zinc-50">
+        {/* アプリ名：ロゴをタイトルの右下に添える */}
+        <div className="mb-8 flex items-end justify-center">
+          <h1 className="text-7xl font-[1000] tracking-tighter text-zinc-900 sm:text-8xl flex items-end gap-1">
+            UMA<span className="text-blue-600">-</span>CHI
+            <img
+              src="/logo-uma.png"
+              alt="Logo"
+              className="h-8 w-8 sm:h-16 sm:w-16 object-contain mb-1 sm:mb-2 transition-transform hover:scale-110"
+            />
+          </h1>
+        </div>
+
+        {/* サブタイトル */}
+        <div className="relative mb-12 rounded-2xl bg-white/90 backdrop-blur-sm px-8 py-4 shadow-[0_4px_0_0_#E5E7EB] border-2 border-zinc-50">
           <p className="text-lg font-bold text-zinc-700 sm:text-2xl leading-relaxed">
             馬が合う人、<span className="text-blue-600 underline decoration-4 decoration-blue-100 underline-offset-4">ロジック</span>で探します
           </p>
@@ -26,7 +44,7 @@ export default function Home() {
         </div>
 
         {/* 診断ボタン（上部） */}
-        <div className="w-full max-w-xs mb-8 space-y-4">
+        <div className="w-full max-w-xs mb-16 space-y-4">
           {/* 2人で診断するボタン */}
           <Link
             href="/diagnostic?mode=two"
@@ -45,47 +63,65 @@ export default function Home() {
           </Link>
         </div>
 
-        <div className="w-full space-y-20 text-left mb-16">
+        {/* 診断手順セクション：大画面では横にドーンと大きく */}
+        <section className="w-full max-w-[1400px] mx-auto mb-24 text-left">
+          <h2 className="mb-12 text-center text-3xl sm:text-5xl font-[1000] text-zinc-800">
+            診断の流れ
+          </h2>
 
-          {/* アプリ概要 */}
-          <section className="relative">
-            <h2 className="mb-6 text-center text-2xl font-black text-zinc-800 flex items-center justify-center gap-3">
-              <span className="h-1.5 w-8 rounded-full bg-blue-600"></span>
-              UMA-CHIとは？
-              <span className="h-1.5 w-8 rounded-full bg-blue-600"></span>
-            </h2>
-            <div className="rounded-3xl bg-white p-8 shadow-[0_4px_0_0_#E5E7EB] border-2 border-zinc-50 text-center">
-              <p className="font-bold leading-loose text-zinc-600 sm:text-lg">
-                UMA-CHI は、短い質問に答えるだけで<br />
-                <span className="text-zinc-900">「この人と一緒に作業すると合うかどうか」</span>を<br />
-                <span className="text-blue-600">数値と理由</span>で教えてくれる Web アプリです。
-              </p>
-            </div>
-          </section>
-
-          {/* 診断手順 */}
-          <section>
-            <h2 className="mb-8 text-center text-xl font-black text-zinc-800">
-              診断の流れ
-            </h2>
-            <div className="grid gap-6 sm:grid-cols-3">
-              {[
-                { step: "Analyze", title: "診断回答", desc: "10問の質問に答え、あなたの思考スタイルを抽出します。" },
-                { step: "Score", title: "数値化", desc: "独自のロジックで相性を0〜100%で算出します。" },
-                { step: "Visualize", title: "結果表示", desc: "相性ランクと、納得感のある具体的理由を解説。" }
-              ].map((item) => (
-                <div key={item.step} className="relative rounded-2xl bg-white p-6 shadow-[0_4px_0_0_#E5E7EB] border-2 border-zinc-50">
-                  <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] block mb-2">{item.step}</span>
-                  <h3 className="mb-2 text-lg font-black text-zinc-800">{item.title}</h3>
-                  <p className="text-xs font-bold leading-relaxed text-zinc-500">{item.desc}</p>
+          <div className="flex flex-col gap-8 lg:flex-row lg:justify-center">
+            {/* 01. 診断回答 */}
+            <div className="flex flex-row lg:flex-col items-center bg-white rounded-[2.5rem] p-6 lg:p-10 shadow-[0_10px_0_0_#E5E7EB] border-2 border-zinc-50 w-full lg:max-w-[400px] h-[160px] lg:h-auto transition-all hover:shadow-none">
+              <div className="flex h-24 w-24 lg:h-48 lg:w-full flex-shrink-0 items-center justify-center rounded-2xl bg-zinc-50/50 mb-0 lg:mb-8">
+                <img src="/D.P-1.png" alt="Step 1" className="h-[80%] w-[80%] object-contain lg:scale-125" />
+              </div>
+              <div className="ml-6 lg:ml-0 flex-1 lg:text-center">
+                <div className="flex items-center lg:justify-center gap-2 mb-2">
+                  <span className="text-[10px] font-black bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full uppercase">Step 01</span>
+                  <h3 className="text-xl lg:text-3xl font-black text-zinc-800">10問の質問</h3>
                 </div>
-              ))}
+                <p className="text-sm lg:text-lg font-bold text-zinc-500 leading-snug">
+                  作業スタイルに直感的に答えるだけ。
+                </p>
+              </div>
             </div>
-          </section>
-        </div>
 
-        {/* 診断ボタン（下部） */}
-        <div className="mt-20 w-full border-t-2 border-dashed border-zinc-200 pt-16 flex flex-col items-center">
+            {/* 02. 数値化 */}
+            <div className="flex flex-row-reverse lg:flex-col items-center bg-white rounded-[2.5rem] p-6 lg:p-10 shadow-[0_10px_0_0_#E5E7EB] border-2 border-zinc-50 w-full lg:max-w-[400px] h-[160px] lg:h-auto transition-all hover:shadow-none">
+              <div className="flex h-24 w-24 lg:h-48 lg:w-full flex-shrink-0 items-center justify-center rounded-2xl bg-zinc-50/50 mb-0 lg:mb-8">
+                <img src="/D.P-2.png" alt="Step 2" className="h-[80%] w-[80%] object-contain lg:scale-125" />
+              </div>
+              <div className="mr-6 lg:mr-0 text-right lg:text-center flex-1">
+                <div className="flex flex-row-reverse lg:flex-row items-center lg:justify-center gap-2 mb-2">
+                  <span className="text-[10px] font-black bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full uppercase">Step 02</span>
+                  <h3 className="text-xl lg:text-3xl font-black text-zinc-800">相性スコア</h3>
+                </div>
+                <p className="text-sm lg:text-lg font-bold text-zinc-500 leading-snug">
+                  独自のロジックで相性を算出します。
+                </p>
+              </div>
+            </div>
+
+            {/* 03. 評価 */}
+            <div className="flex flex-row lg:flex-col items-center bg-white rounded-[2.5rem] p-6 lg:p-10 shadow-[0_10px_0_0_#E5E7EB] border-2 border-zinc-50 w-full lg:max-w-[400px] h-[160px] lg:h-auto transition-all hover:shadow-none">
+              <div className="flex h-24 w-24 lg:h-48 lg:w-full flex-shrink-0 items-center justify-center rounded-2xl bg-zinc-50/50 mb-0 lg:mb-8">
+                <img src="/D.P-3.png" alt="Step 3" className="h-[80%] w-[80%] object-contain lg:scale-125" />
+              </div>
+              <div className="ml-6 lg:ml-0 text-left lg:text-center flex-1">
+                <div className="flex items-center lg:justify-center gap-2 mb-2">
+                  <span className="text-[10px] font-black bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full uppercase">Step 03</span>
+                  <h3 className="text-xl lg:text-3xl font-black text-zinc-800">ランクと理由</h3>
+                </div>
+                <p className="text-sm lg:text-lg font-bold text-zinc-500 leading-snug">
+                  分析結果をロジックで詳しく解説。
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 下部の診断導線 */}
+        <div className="mt-12 w-full border-t-2 border-dashed border-zinc-200 pt-16 flex flex-col items-center">
           <p className="mb-6 text-sm font-bold text-zinc-400">
             ＼ まずは診断してみよう！ ／
           </p>
@@ -110,8 +146,8 @@ export default function Home() {
         </div>
 
         {/* フッター */}
-        <div className="mt-24 text-[10px] font-bold text-zinc-300 tracking-[0.3em] uppercase">
-          © UMA-CHI Project 2024
+        <div className="mt-24 text-xs font-bold text-zinc-300 tracking-[0.2em] uppercase">
+          © UMA-CHI Project 2026
         </div>
       </main>
     </div>

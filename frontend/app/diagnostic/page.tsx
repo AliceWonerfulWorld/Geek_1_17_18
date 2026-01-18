@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { QUESTIONS } from '@/lib/questions';
 import { DiagnosticAnswers, STORAGE_KEY, RESULT_STORAGE_KEY, ANSWERS_A_KEY, ANSWERS_B_KEY, MODE_KEY, CURRENT_PERSON_KEY, DIAGNOSIS_CODE_KEY, COMPARE_CODE_KEY } from '@/types/diagnosis';
@@ -17,6 +17,7 @@ function DiagnosticContent() {
   const isTwoPersonMode = mode === 'two';
 
   const [answers, setAnswers] = useState<DiagnosticAnswers>({});
+  const questionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentPerson, setCurrentPerson] = useState<'A' | 'B'>('A'); // 2人モード時の現在回答者
   const [compareCode, setCompareCode] = useState(''); // 比較用診断コード（1人モードのみ）
@@ -82,7 +83,24 @@ function DiagnosticContent() {
       // 1人モード：既存のキーに保存
       sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newAnswers));
     }
-  };
+    // 次の質問へ自動スクロール
+    const currentIndex = QUESTIONS.findIndex(q => q.id === questionId);
+    const nextIndex = currentIndex + 1;
+    
+    if (nextIndex < QUESTIONS.length) {
+      const nextQuestionId = QUESTIONS[nextIndex].id;
+      const nextQuestionElement = questionRefs.current[nextQuestionId];
+      
+      if (nextQuestionElement) {
+        // 少し遅延させてDOMの更新を待つ
+        setTimeout(() => {
+          nextQuestionElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          });
+        }, 100);
+      }
+    }  };
 
   // 全問回答済みかチェック
   const isAllAnswered = QUESTIONS.every((q) => answers[q.id] !== undefined);
@@ -321,13 +339,19 @@ function DiagnosticContent() {
 
         <div className="space-y-6 pb-32">
           {QUESTIONS.map((question, index) => (
-            <QuestionCard
+            <div
               key={question.id}
-              question={question}
-              questionNumber={index + 1}
-              selectedValue={answers[question.id]}
-              onChange={handleAnswerChange}
-            />
+              ref={(el) => {
+                questionRefs.current[question.id] = el;
+              }}
+            >
+              <QuestionCard
+                question={question}
+                questionNumber={index + 1}
+                selectedValue={answers[question.id]}
+                onChange={handleAnswerChange}
+              />
+            </div>
           ))}
         </div>
 

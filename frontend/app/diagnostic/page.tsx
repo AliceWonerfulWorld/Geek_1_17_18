@@ -280,7 +280,6 @@ function DiagnosticContent() {
           )}
         </div>
 
-        <div className="space-y-8 mb-32">
         {/* 診断コード入力欄（1人モードのみ） */}
         {!isTwoPersonMode && (
           <div className="mb-8 p-6 bg-purple-50 dark:bg-purple-900/20 rounded-2xl border-2 border-purple-200 dark:border-purple-800">
@@ -321,7 +320,6 @@ function DiagnosticContent() {
         )}
 
         <div className="space-y-6 mb-8">
-
           {QUESTIONS.map((question, index) => (
             <QuestionCard
               key={question.id}
